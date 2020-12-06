@@ -21,13 +21,10 @@ module.exports={
                 console.log(req.body.data)
                 const data = JSON.parse(req.body.data); 
                 let datainsert={
-                    namaproduct:data.namaproduct,
-                    capacity:data.capacity,
-                    harga:data.harga,
-                    banner:imagePath,
+                    nama:data.nama,
+                    price:data.price,
                     deskripsi:data.deskripsi,
-                    tanggalmulai:data.tanggalmulai,
-                    tanggalberakhir:data.tanggalberakhir
+                    banner:imagePath,
                 }
                 // data.banner=imagePath
                 console.log(datainsert)
