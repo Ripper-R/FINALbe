@@ -117,5 +117,8 @@ module.exports={
             })
         })
     },
+    addkimia:(req,res)=>{
+        
+    }
     
 }
