@@ -39,7 +39,7 @@ module.exports={
             storage: storage,
             fileFilter: imageFilter,
             limits:{
-                fileSize: 1 * 1024 * 1024 // 1MB
+                fileSize: 3 * 1024 * 1024 // 1MB
             }
         });
     }
