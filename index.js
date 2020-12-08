@@ -17,7 +17,7 @@ app.use(express.static('public'))
 
 
 app.get('/',(req,res)=>{
-    res.send('<h1>Your Trusted Drugstore</h1>')
+    res.send('<h1>your most trusted drugstore DRUGSTORE</h1>')
 })
 
 const {
