@@ -78,11 +78,11 @@ module.exports={
             if (!datausers.length){
                 return res.status(500).send({message:'user tidak terdaftar bro'})
             }
-            sql=`select td.qty,p.namaproduct,p.banner,p.harga,p.id as idprod,t.id as idtrans 
-                from transactionsdetail td 
-                join transactions t on td.transactions_id=t.id 
+            sql=`select td.qty,p.nama,p.banner,p.price,p.id as idprod,t.id as idtrans 
+                from transactionsdetails td 
+                join transactions t on td.transaction_id=t.id 
                 join product p on td.product_id=p.id
-                where t.status='onCart' and t.users_id=? and td.isdeleted=0`
+                where t.status='onCart' and t.user_id=?`
             db.query(sql,[datausers[0].id],(err,cart)=>{
                 if (err) return res.status(500).send({message:err.message})
                 const token=createJWToken({id:datausers[0].id,username:datausers[0].username})
