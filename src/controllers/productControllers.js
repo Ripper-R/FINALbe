@@ -12,7 +12,7 @@ module.exports={
                     return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
                 }
                 console.log('berhasil upload')
-                console.log(req.files)
+               
                 const {image} = req.files;
                 console.log(image)
                 // console.log(robin)
@@ -118,25 +118,30 @@ module.exports={
         })
     },
     addkimia:(req,res)=>{
-       try{
-           const data=JSON.parse(req.body.data)
+           const data=req.body
+           console.log(data)
            let datain={
-               stock=data.stock,
-               date=data.date,
-               kimia_id=data.kimia_id
-   
+               stock:data.stock,
+               kimia_id:data.kimia_id
            }
+           console.log(datain)
            db.query('insert into inventory set ?',datain,(err)=>{
-               return res.status(500).send(err)
+               if(err) {
+                console.log(err)   
+                res.status(500).send(err)
+               }
+               let sql='select * from inventory'
+               db.query(sql,(err,dataa)=>{
+                   if (err) return res.status(500).send(err)
+                   return res.status(200).send(dataa)
+                })
            })
-           db.query('select * from inventory',(err,data)=>{
-               if (err) return res.status(500).send(err)
-                return res.status(200).send(data)
-           })
-
-       } catch(error){
-           return res.status(500).send(error)
-       }
+    },
+    getkimia:(req,res)=>{
+        let sql='select * from inventory'
+               db.query(sql,(err,dataa)=>{
+                   if (err) return res.status(500).send(err)
+                   return res.status(200).send(dataa)
+                })
     }
-    
 }
