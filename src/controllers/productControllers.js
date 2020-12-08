@@ -118,7 +118,25 @@ module.exports={
         })
     },
     addkimia:(req,res)=>{
-        
+       try{
+           const data=JSON.parse(req.body.data)
+           let datain={
+               stock=data.stock,
+               date=data.date,
+               kimia_id=data.kimia_id
+   
+           }
+           db.query('insert into inventory set ?',datain,(err)=>{
+               return res.status(500).send(err)
+           })
+           db.query('select * from inventory',(err,data)=>{
+               if (err) return res.status(500).send(err)
+                return res.status(200).send(data)
+           })
+
+       } catch(error){
+           return res.status(500).send(error)
+       }
     }
     
 }
