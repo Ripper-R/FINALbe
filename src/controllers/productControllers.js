@@ -122,10 +122,11 @@ module.exports={
            console.log(data)
            let datain={
                stock:data.stock,
-               kimia_id:data.kimia_id
+                nama:data.nama,
+                kimia_id:data.kimia_id
            }
            console.log(datain)
-           db.query('insert into inventory set ?',datain,(err)=>{
+           db.query('insert into inventory join set ?',datain,(err)=>{
                if(err) {
                 console.log(err)   
                 res.status(500).send(err)
@@ -138,7 +139,7 @@ module.exports={
            })
     },
     getkimia:(req,res)=>{
-        let sql='select * from inventory'
+        let sql='select * from inventory  join kimia where inventory.kimia_id=kimia.id  '
                db.query(sql,(err,dataa)=>{
                    if (err) return res.status(500).send(err)
                    return res.status(200).send(dataa)
