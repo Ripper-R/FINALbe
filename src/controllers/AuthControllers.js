@@ -96,11 +96,11 @@ module.exports={
         let sql=`select * from users where id=${db.escape(id)}`
         try {
             const results= await DbPROMselect(sql)
-            sql=`select td.qty,p.namaproduct,p.banner,p.harga,p.id as idprod,t.id as idtrans 
-                from transactionsdetail td 
-                join transactions t on td.transactions_id=t.id 
+            sql=`select td.qty,p.nama,p.banner,p.price,p.id as idprod,t.id as idtrans 
+                from transactionsdetails td 
+                join transactions t on td.transaction_id=t.id 
                 join product p on td.product_id=p.id
-                where t.status='onCart' and t.users_id=${db.escape(results[0].id)} and td.isdeleted=0`
+                where t.status='onCart' and t.users_id=${db.escape(results[0].id)}`
             const cart=await DbPROMselect(sql)
             const token=createJWToken({id:results[0].id,username:results[0].username})
             results[0].token=token
