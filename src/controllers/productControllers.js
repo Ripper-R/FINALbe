@@ -139,7 +139,7 @@ module.exports={
            })
     },
     getkimia:(req,res)=>{
-        let sql='select * from inventory  join kimia where inventory.kimia_id=kimia.id  '
+        let sql='select * , sum(inventory.stock) as sum from inventory  join kimia on inventory.kimia_id=kimia.id group by inventory.kimia_id' 
                db.query(sql,(err,dataa)=>{
                    if (err) return res.status(500).send(err)
                    return res.status(200).send(dataa)
