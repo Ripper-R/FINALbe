@@ -48,7 +48,7 @@ module.exports={
         }
     },
     getProduct:(req,res)=>{
-        let sql=`select * from product `
+        let sql=    `select * from product`
         db.query(sql,(err,dataproduct)=>{
             if (err) return res.status(500).send(err)
             return res.status(200).send(dataproduct)
@@ -121,7 +121,7 @@ module.exports={
            const data=req.body
            console.log(data)
            let datain={
-               stock:data.stock,
+                stock:data.stock,
                 nama:data.nama,
                 kimia_id:data.kimia_id
            }
@@ -144,5 +144,26 @@ module.exports={
                    if (err) return res.status(500).send(err)
                    return res.status(200).send(dataa)
                 })
+    },
+    adddosis:(req,res)=>{
+        const data=req.body
+           console.log(data)
+           let datain={
+                product_id:data.product_id,
+                kimia_id:data.kimia_id,
+                dosis:data.dosis
+           }
+           console.log(datain)
+           db.query('insert into product_details set ?',datain,(err)=>{
+               if(err) {
+                console.log(err)   
+                res.status(500).send(err)
+               }
+               let sql='select * from product_details'
+               db.query(sql,(err,dataa)=>{
+                   if (err) return res.status(500).send(err)
+                   return res.status(200).send(dataa)
+                })
+           })
     }
 }
