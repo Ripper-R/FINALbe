@@ -3,7 +3,7 @@ const {TransactionsControllers}=require('../controllers')
 const {auth}=require('../helpers/Auth')
 const {checkuser}=require('../helpers/checkingUser')
 
-Router.post('/Addtocart',auth,TransactionsControllers.Addtocart) //perlu token
+Router.post('/Addtocart',TransactionsControllers.Addtocart) //perlu token
 Router.get('/getcart',TransactionsControllers.getCart) 
 Router.post('/bayarcc',auth,TransactionsControllers.onbayarCC) 
 Router.post('/bayarbukti',auth,checkuser,TransactionsControllers.uploadPembayaran) 

@@ -80,7 +80,7 @@ module.exports={
             }
             sql=`select td.qty,p.nama,p.banner,p.price,p.id as idprod,t.id as idtrans 
                 from transactionsdetails td 
-                join transactions t on td.transaction_id=t.id 
+                join transactions t on td.transactions_id=t.id 
                 join product p on td.product_id=p.id
                 where t.status='onCart' and t.user_id=?`
             db.query(sql,[datausers[0].id],(err,cart)=>{
@@ -98,9 +98,9 @@ module.exports={
             const results= await DbPROMselect(sql)
             sql=`select td.qty,p.nama,p.banner,p.price,p.id as idprod,t.id as idtrans 
                 from transactionsdetails td 
-                join transactions t on td.transaction_id=t.id 
+                join transactions t on td.transactions_id=t.id 
                 join product p on td.product_id=p.id
-                where t.status='onCart' and t.users_id=${db.escape(results[0].id)}`
+                where t.status='onCart' and t.user_id=${db.escape(results[0].id)}`
             const cart=await DbPROMselect(sql)
             const token=createJWToken({id:results[0].id,username:results[0].username})
             results[0].token=token
