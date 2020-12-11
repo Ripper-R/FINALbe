@@ -53,7 +53,7 @@ module.exports={
                         const htmlemail=template({name:userslogin[0].username,link:link})
 
                         transporter.sendMail({
-                            from:"DrugStore <Annoyance@gmail.com>",
+                            from:"DrugStore <Drugstoreofficial@gmail.com>",
                             to:email,
                             subject:'Please confirm your email',
                             html:htmlemail
@@ -61,6 +61,7 @@ module.exports={
                             userslogin[0].token=token
                             return res.send(userslogin[0])
                         }).catch((err)=>{
+                            console.log(err)
                             return res.status(500).send({message:err.message})
                         })
                     })

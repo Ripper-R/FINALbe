@@ -88,7 +88,7 @@ Addtocart:(req,res)=>{
                 status:"oncart",
                 user_id:userid
             }
-            console.log('ddd')
+            console.log('Test')
             db.beginTransaction((err)=>{
                 if (err) { 
                     console.log(err)
@@ -164,13 +164,14 @@ onbayarCC:(req,res)=>{
         buktipembayaran:nomercc
     }
     db.query(sql,dataupdate,(err)=>{
+        console.log(err)
         if (err){
             console.log(err)
             return res.status(500).send(err)
         }
         let arr=[]
         datacart.forEach((val)=>{
-            arr.push(QueryProm(`update transactionsdetails set hargabeli=${val.harga} where transactions_id=${val.idtrans} and product_id=${val.idprod}`))
+            arr.push(QueryProm(`update transactionsdetails set totalprice=${val.price} where transactions_id=${val.idtrans} and product_id=${val.idprod}`))
         })
         Promise.all(arr).then(()=>{
             return res.send('berhasil')// nggak perlu get cart lagi karena cart kalo berhasil otomatis kosong 
