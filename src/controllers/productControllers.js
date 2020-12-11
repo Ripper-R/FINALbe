@@ -139,7 +139,7 @@ module.exports={
            })
     },
     getkimia:(req,res)=>{
-        let sql='select * , sum(inventory.stock) as sum from inventory  join kimia on inventory.kimia_id=kimia.id group by inventory.kimia_id' 
+        let sql='select * , sum(inventory.stock + adder.adder) as sum from inventory  join kimia on inventory.kimia_id=kimia.id join adder on inventory.kimia_id=adder.kimia_id group by inventory.kimia_id' 
                db.query(sql,(err,dataa)=>{
                    if (err) return res.status(500).send(err)
                    return res.status(200).send(dataa)
@@ -165,5 +165,45 @@ module.exports={
                    return res.status(200).send(dataa)
                 })
            })
-    }
+    },
+    adder:(req,res)=>{
+        const data=req.body
+        console.log(data)
+        let datain={
+             adder:data.adder,
+             kimia_id:data.kimia_id
+        }
+        console.log(datain)
+        db.query('insert into adder set ?',datain,(err)=>{
+            if(err) {
+             console.log(err)   
+             res.status(500).send(err)
+            }
+            let sql='select * from adder'
+            db.query(sql,(err,dataa)=>{
+                if (err) return res.status(500).send(err)
+                return res.status(200).send(dataa)
+             })
+        })
+    },
+    upadder:(req,res)=>{
+        const data=req.body
+        console.log(data)
+        let datain={
+             adder:data.adder,
+             
+        }
+        console.log(datain)
+        db.query(`update adder set ? where kimia_id=${db.escape(data.kimia_id)}`,datain,(err)=>{
+            if(err) {
+             console.log(err)   
+             res.status(500).send(err)
+            }
+            let sql='select * from adder'
+            db.query(sql,(err,dataa)=>{
+                if (err) return res.status(500).send(err)
+                return res.status(200).send(dataa)
+             })
+        })
+    },
 }
