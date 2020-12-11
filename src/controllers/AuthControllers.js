@@ -19,12 +19,17 @@ const DbPROMselect=(sql)=>{
 module.exports={
     register:(req,res)=>{
         const {username,email,password}=req.body
+        // let sql=`select * from users where username = "${username}"`
         let sql=`select * from users where username = ?`
         db.query(sql,[username],(err,users)=>{
+            //console.log(err)
             if (err) return res.status(500).send({message:"server error bro"})
             if(users.length){
+                console.log(users)
+
                 return res.status(500).send({message:"username telah di ambil"})
             }else{
+                console.log("masuk")
                 let hashpassword=encrypt(password)
                 var data={
                     username:username,
@@ -33,6 +38,7 @@ module.exports={
                 }
                 sql=`insert into users set ?`
                 db.query(sql,data,(err,results)=>{
+                    console.log(err)
                     if (err) return res.status(500).send({message:"server error bro"})
 
                     console.log('berhasil post data users')
@@ -41,20 +47,21 @@ module.exports={
                         if (err) return res.status(500).send({message:"server error bro"})
 
                         const token=createJWToken({id:userslogin[0].id,username:userslogin[0].username})
-                        const link=`http://localhost:3000/verified?token=${token}`
+                        const link=`http://localhost:8080/verified?token=${token}`
                         const htmlrender=fs.readFileSync('./template/email.html','utf8')//html berubah jadi string
                         const template=handlebars.compile(htmlrender) 
                         const htmlemail=template({name:userslogin[0].username,link:link})
 
                         transporter.sendMail({
-                            from:"DrugSTore <Annoyance@gmail.com>",
+                            from:"DrugStore <Drugstoreofficial@gmail.com>",
                             to:email,
-                            subject:'Hai konfirm dulu dong',
+                            subject:'Please confirm your email',
                             html:htmlemail
                         }).then(()=>{
                             userslogin[0].token=token
                             return res.send(userslogin[0])
                         }).catch((err)=>{
+                            console.log(err)
                             return res.status(500).send({message:err.message})
                         })
                     })
@@ -67,15 +74,16 @@ module.exports={
         let hashpassword=encrypt(password)
         let sql=`select * from users where username = ? and password = ?`
         db.query(sql,[username,hashpassword],(err,datausers)=>{
+            console.log(err)
             if (err) return res.status(500).send({message:err.message})
             if (!datausers.length){
-                return res.status(500).send({message:'user tidak terdaftarbro'})
+                return res.status(500).send({message:'user tidak terdaftar bro'})
             }
-            sql=`select td.qty,p.namaproduct,p.banner,p.harga,p.id as idprod,t.id as idtrans 
-                from transactionsdetail td 
+            sql=`select td.qty,p.nama,p.banner,p.price,p.id as idprod,t.id as idtrans 
+                from transactionsdetails td 
                 join transactions t on td.transactions_id=t.id 
                 join product p on td.product_id=p.id
-                where t.status='onCart' and t.users_id=? and td.isdeleted=0`
+                where t.status='onCart' and t.user_id=?`
             db.query(sql,[datausers[0].id],(err,cart)=>{
                 if (err) return res.status(500).send({message:err.message})
                 const token=createJWToken({id:datausers[0].id,username:datausers[0].username})
@@ -89,11 +97,11 @@ module.exports={
         let sql=`select * from users where id=${db.escape(id)}`
         try {
             const results= await DbPROMselect(sql)
-            sql=`select td.qty,p.namaproduct,p.banner,p.harga,p.id as idprod,t.id as idtrans 
-                from transactionsdetail td 
+            sql=`select td.qty,p.nama,p.banner,p.price,p.id as idprod,t.id as idtrans 
+                from transactionsdetails td 
                 join transactions t on td.transactions_id=t.id 
                 join product p on td.product_id=p.id
-                where t.status='onCart' and t.users_id=${db.escape(results[0].id)} and td.isdeleted=0`
+                where t.status='onCart' and t.user_id=${db.escape(results[0].id)}`
             const cart=await DbPROMselect(sql)
             const token=createJWToken({id:results[0].id,username:results[0].username})
             results[0].token=token
