@@ -48,7 +48,7 @@ module.exports={
         }
     },
     getProduct:(req,res)=>{
-        let sql=`select * from product `
+        let sql=    `select * from product`
         db.query(sql,(err,dataproduct)=>{
             if (err) return res.status(500).send(err)
             return res.status(200).send(dataproduct)
@@ -121,11 +121,12 @@ module.exports={
            const data=req.body
            console.log(data)
            let datain={
-               stock:data.stock,
-               kimia_id:data.kimia_id
+                stock:data.stock,
+                nama:data.nama,
+                kimia_id:data.kimia_id
            }
            console.log(datain)
-           db.query('insert into inventory set ?',datain,(err)=>{
+           db.query('insert into inventory join set ?',datain,(err)=>{
                if(err) {
                 console.log(err)   
                 res.status(500).send(err)
@@ -138,10 +139,71 @@ module.exports={
            })
     },
     getkimia:(req,res)=>{
-        let sql='select * from inventory'
+        let sql='select * , sum(inventory.stock + adder.adder) as sum from inventory  join kimia on inventory.kimia_id=kimia.id join adder on inventory.kimia_id=adder.kimia_id group by inventory.kimia_id' 
                db.query(sql,(err,dataa)=>{
                    if (err) return res.status(500).send(err)
                    return res.status(200).send(dataa)
                 })
-    }
+    },
+    adddosis:(req,res)=>{
+        const data=req.body
+           console.log(data)
+           let datain={
+                product_id:data.product_id,
+                kimia_id:data.kimia_id,
+                dosis:data.dosis
+           }
+           console.log(datain)
+           db.query('insert into product_details set ?',datain,(err)=>{
+               if(err) {
+                console.log(err)   
+                res.status(500).send(err)
+               }
+               let sql='select * from product_details'
+               db.query(sql,(err,dataa)=>{
+                   if (err) return res.status(500).send(err)
+                   return res.status(200).send(dataa)
+                })
+           })
+    },
+    adder:(req,res)=>{
+        const data=req.body
+        console.log(data)
+        let datain={
+             adder:data.adder,
+             kimia_id:data.kimia_id
+        }
+        console.log(datain)
+        db.query('insert into adder set ?',datain,(err)=>{
+            if(err) {
+             console.log(err)   
+             res.status(500).send(err)
+            }
+            let sql='select * from adder'
+            db.query(sql,(err,dataa)=>{
+                if (err) return res.status(500).send(err)
+                return res.status(200).send(dataa)
+             })
+        })
+    },
+    upadder:(req,res)=>{
+        const data=req.body
+        console.log(data)
+        let datain={
+             adder:data.adder,
+             
+        }
+        console.log(datain)
+        db.query(`update adder set ? where kimia_id=${db.escape(data.kimia_id)}`,datain,(err)=>{
+            if(err) {
+             console.log(err)   
+             res.status(500).send(err)
+            }
+            let sql='select * from adder'
+            db.query(sql,(err,dataa)=>{
+                if (err) return res.status(500).send(err)
+                return res.status(200).send(dataa)
+             })
+        })
+    },
 }
