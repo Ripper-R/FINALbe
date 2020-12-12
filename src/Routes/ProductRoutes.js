@@ -13,5 +13,6 @@ Router.post('/adddosis',ProductContrrollers.adddosis)
 Router.post('/adder',ProductContrrollers.adder)
 Router.post('/upadder',ProductContrrollers.upadder)
 Router.delete('/deleteinven/:id',ProductContrrollers.deleteinventory)
+Router.get('/getprodetail',ProductContrrollers.proddetail)
 // cannot get||post||put||delete artinya endpointnya belum adaa
 module.exports=Router

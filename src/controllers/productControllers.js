@@ -54,6 +54,13 @@ module.exports={
             return res.status(200).send(dataproduct)
         })
     },
+    proddetail:(req,res)=>{
+        let sql=    `select * from product join product_details where product.id=product_details.product_id`
+        db.query(sql,(err,dataproduct)=>{
+            if (err) return res.status(500).send(err)
+            return res.status(200).send(dataproduct)
+        })
+    },
     Addproductfoto:(req,res)=>{
         try {
             const path='/product/foto'//ini terserah
