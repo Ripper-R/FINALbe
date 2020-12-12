@@ -205,5 +205,18 @@ module.exports={
                 return res.status(200).send(dataa)
              })
         })
-    },
+    },deleteinventory:(req,res)=>{
+        const{id}=req.params
+        let sql=`delete from inventory where id=?`
+        db.query(sql,id,(err)=>{
+            if (err){
+                return res.status(500).send(err.message)
+            }
+            sql=`select * from  inventory`
+            db.query(sql,(err,dataaa)=>{
+                if (err) return res.status(500).send(err)
+                return res.status(200).send(dataaa)
+             })
+        })
+    }
 }
