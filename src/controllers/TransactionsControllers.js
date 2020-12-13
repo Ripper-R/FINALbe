@@ -1,4 +1,4 @@
-const {db}=require('../connections')
+const {db,querysql}=require('../connections')
 const {uploader}=require('../helpers/uploader')
 const {transporter}=require('../helpers')
 const fs=require('fs')
@@ -6,6 +6,7 @@ const handlebars=require('handlebars')
 const QueryProm=(sql)=>{
 return new Promise((resolve,reject)=>{
     db.query(sql,(err,results)=>{
+        // console.log('masuk await')
         if (err){
             reject(err)
         }else{
@@ -179,7 +180,7 @@ onbayarCC:(req,res)=>{
             console.log(err)
             return res.status(500).send(err)
         })
-
+        
     })
 },
 uploadPembayaran:(req,res)=>{
@@ -215,6 +216,90 @@ uploadPembayaran:(req,res)=>{
         })
     })
 },
+
+inventDec:async (req,res)=>{
+    try{
+    const {datacart}=req.body
+    // console.log(req.body)
+    let sql=`SELECT * FROM product_details
+    JOIN transactionsdetails ON transactionsdetails.product_id=product_details.product_id
+    JOIN inventory ON product_details.kimia_id=inventory.kimia_id
+    WHERE transactions_id=${datacart[0].idtrans}`
+    const hasil= await QueryProm(sql)
+    console.log(hasil)
+    hasil.forEach(async (val) => {
+        // sql = `SELECT stock FROM inventory where kimia_id=${val.kimia_id}`
+        let sql2 = `UPDATE inventory i,( SELECT stock FROM inventory where id=${val.kimia_id}) as t1
+            SET i.stock = t1.stock - (${val.dosis * val.qty})
+            WHERE i.id = ${val.kimia_id};`
+            await QueryProm(sql2)
+        })        
+    }   catch(err){
+        return res.status(500).send({message:error.message})
+    }
+},
+
+        // db.query(sql,(err,response)=>{
+        //     if (err){
+        //         console.log(err)
+        //         return res.status(500).send(err)
+        //     }
+        //     console.log(response[0].stock)
+        //     sql2 = `UPDATE inventory SET stock = ${response[0].stock - (val.dosis * val.qty)} WHERE id=${val.kimia_id}`
+        //     console.log(sql2)
+        // })
+        // db.query(sql2,(err,response)=>{
+        //     if (err){
+        //         console.log(err)
+        //         return res.status(500).send(err)
+        //     }
+        //     console.log(response.message)
+        // })
+        // try{
+            // try{
+            //     let sql2 = `SELECT stock FROM inventory where kimia_id=${val.kimia_id}`
+            //     let stockNow = await QueryProm(sql2)
+            //     let newStock = await stockNow[0].stock - (val.dosis * val.qty)
+            //     console.log(stockNow)
+            //     console.log(newStock)
+            //     let sql3 = `UPDATE inventory SET stock = ${await stockNow[0].stock - (val.dosis * val.qty)} WHERE id=${val.kimia_id}`
+            //     console.log(sql3)
+            //     let newestStock = await QueryProm(sql3)
+            //     console.log(newestStock.message)
+
+            // }catch(err){
+            //     return res.status(500).send({message:error.message})
+            // }
+
+        
+        //     for (let i = 0; i < datacart.length; i++) {
+        //         // console.log(datacart[i].idprod)
+        //         let sql=`SELECT product_id, kimia_id, dosis  FROM product_details where product_id=${datacart[i].idprod}`
+        //         console.log(sql)
+                
+        //         let  result= await QueryProm(sql)
+        //         console.log(result[i])
+        //         product_details.push(result[0])
+        //     }
+        //     console.log(product_details)
+        //     for (let i = 0; i < await  product_details.length; i++) {
+        //         // console.log(datacart[i].idprod)
+        //         let sql1=`SELECT stock from inventory where kimia_id=${product_details[i].kimia_id}`
+        //         let stockinv = await QueryProm(sql1)
+        //         // console.log(stockinv)
+        //         // console.log(sql1)
+        //     }
+        //         // console.log(product_details[0].kimia_id)
+        
+        
+        //     // })
+
+    
+
+
+    
+    
+
 getAdminwaittingApprove:(req,res)=>{
     let sql=`select * from transactions where status='onwaitingapprove'`
     db.query(sql,(err,waitingapprove)=>{
@@ -298,5 +383,6 @@ Adminreject:(req,res)=>{
         //     return res.send(waitingapprove)
         // })
     })
-}
+},
+
 }
