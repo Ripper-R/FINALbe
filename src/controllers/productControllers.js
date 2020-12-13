@@ -55,7 +55,7 @@ module.exports={
         })
     },
     proddetail:(req,res)=>{
-        let sql=    `select * from product join product_details where product.id=product_details.product_id`
+        let sql=    `select * from product left join product_details on product.id=product_details.product_id group by product_details.kimia_id`
         db.query(sql,(err,dataproduct)=>{
             if (err) return res.status(500).send(err)
             return res.status(200).send(dataproduct)
