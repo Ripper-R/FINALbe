@@ -293,15 +293,15 @@ inventDec:async (req,res)=>{
         
         
         //     // })
-
-    
-
-
-    
-    
-
 getAdminwaittingApprove:(req,res)=>{
-    let sql=`select * from transactions where status='onwaitingapprove'`
+    let sql=`select transactions.id,transactionsdetails.transactions_id,transactions.tanggal,transactions.status,transactions.user_id,transactionsdetails.qty,transactionsdetails.product_id,product.nama,product.price,transactions.buktipembayaran ,sum(transactionsdetails.qty * product.price) as totalprice 
+    from transactions 
+    inner join transactionsdetails 
+    on status='OnwaitingApprove'
+    
+    join product
+    where product.id=transactionsdetails.product_id
+    group by product.id`
     db.query(sql,(err,waitingapprove)=>{
         if (err){
             console.log(err)
@@ -327,7 +327,7 @@ AdminApprove:(req,res)=>{
                 console.log(err)
                 return res.status(500).send(err)
             }
-            
+            console.log(datatrans[0])
             sql=`select * from users where id=${db.escape(datatrans[0].user_id)}`
             db.query(sql,(err,datausers)=>{
                 if (err){
@@ -338,7 +338,7 @@ AdminApprove:(req,res)=>{
                 const template=handlebars.compile(htmlrender) 
                 const htmlemail=template({message:'sleamat udah di approve bro'})
                 transporter.sendMail({
-                    from:"Opentrip hiha <dinotestes12@gmail.com>",
+                    from:"Drugstore <naufalgifff@gmail.com>",
                     to:datausers[0].email,
                     subject:'Payment',
                     html:htmlemail
