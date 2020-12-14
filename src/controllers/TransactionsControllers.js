@@ -155,6 +155,20 @@ getCart:(req,res)=>{
         return res.send(datacart)
     })
 },
+
+clearCart:(req,res)=>{
+const {datacart}=req.body
+let sql=`DELETE from transactions where status='onCart'`
+db.query(sql,[datacart],(err,result)=>{
+    if (err){
+        console.log(err)
+        return res.status(500).send(err)
+    }
+    return res.send(result)
+    })
+
+},
+
 onbayarCC:(req,res)=>{
     const {idtrans,nomercc,datacart}=req.body
     let sql=`update transactions set ? where id=${db.escape(idtrans)}` 

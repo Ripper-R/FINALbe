@@ -8,6 +8,7 @@ Router.get('/getcart',TransactionsControllers.getCart)
 Router.post('/bayarcc',auth,TransactionsControllers.onbayarCC) 
 Router.post('/bayarbukti',auth,checkuser,TransactionsControllers.uploadPembayaran)
 Router.post('/inventDec',TransactionsControllers.inventDec)
+Router.delete('/clearCart',TransactionsControllers.clearCart)
 
 // manage payment start
 Router.get('/getwaitingApprove',TransactionsControllers.getAdminwaittingApprove)
