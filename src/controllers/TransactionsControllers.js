@@ -397,13 +397,23 @@ Adminreject:(req,res)=>{
         // })
     })
 },getcompleted:(req,res)=>{
-    let sql=`select * from transactions where status='completed' && user_id=${db.escape(datatrans.user_id)}`
+    let sql=`select * from transactions where status='completed'`
         db.query(sql,(err,data)=>{
             if(err){
                 return res.status(500).send(err)
             }
             return res.status(200).send(data)
         })
+},
+getdetail:(req,res)=>{
+    const {id}=req.params
+    let sql=`select * from transactionsdetails where transactions_id=?`
+    db.query(sql,id,(err,data)=>{
+        if(err){
+            return res.status(500).send(err)
+        }
+        return res.status(200).send(data)
+    })
 }
 
 }

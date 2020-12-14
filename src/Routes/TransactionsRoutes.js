@@ -10,6 +10,7 @@ Router.post('/bayarbukti',auth,checkuser,TransactionsControllers.uploadPembayara
 Router.post('/inventDec',TransactionsControllers.inventDec)
 Router.delete('/clearCart',TransactionsControllers.clearCart)
 Router.get('/getcompleted',TransactionsControllers.getcompleted)
+Router.get('/getdetail/:id',TransactionsControllers.getdetail)
 // manage payment start
 Router.get('/getwaitingApprove',TransactionsControllers.getAdminwaittingApprove)
 Router.put('/approve/:id',TransactionsControllers.AdminApprove)
