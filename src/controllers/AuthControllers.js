@@ -23,11 +23,11 @@ module.exports={
         let sql=`select * from users where username = ?`
         db.query(sql,[username],(err,users)=>{
             //console.log(err)
-            if (err) return res.status(500).send({message:"server error bro"})
+            if (err) return res.status(500).send({message:"Server Error"})
             if(users.length){
                 console.log(users)
 
-                return res.status(500).send({message:"username telah di ambil"})
+                return res.status(500).send({message:"Your Username is already taken!"})
             }else{
                 console.log("masuk")
                 let hashpassword=encrypt(password)
@@ -39,12 +39,12 @@ module.exports={
                 sql=`insert into users set ?`
                 db.query(sql,data,(err,results)=>{
                     console.log(err)
-                    if (err) return res.status(500).send({message:"server error bro"})
+                    if (err) return res.status(500).send({message:"server error"})
 
                     console.log('berhasil post data users')
                     sql=`select * from users where id = ?`
                     db.query(sql,[results.insertId],(err,userslogin)=>{
-                        if (err) return res.status(500).send({message:"server error bro"})
+                        if (err) return res.status(500).send({message:"server error"})
 
                         const token=createJWToken({id:userslogin[0].id,username:userslogin[0].username})
                         const link=`http://localhost:8080/verified?token=${token}`
