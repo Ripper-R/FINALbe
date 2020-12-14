@@ -6,7 +6,9 @@ const {checkuser}=require('../helpers/checkingUser')
 Router.post('/Addtocart',TransactionsControllers.Addtocart) //perlu token
 Router.get('/getcart',TransactionsControllers.getCart) 
 Router.post('/bayarcc',auth,TransactionsControllers.onbayarCC) 
-Router.post('/bayarbukti',auth,checkuser,TransactionsControllers.uploadPembayaran) 
+Router.post('/bayarbukti',auth,checkuser,TransactionsControllers.uploadPembayaran)
+Router.post('/inventDec',TransactionsControllers.inventDec)
+
 // manage payment start
 Router.get('/getwaitingApprove',TransactionsControllers.getAdminwaittingApprove)
 Router.put('/approve/:id',TransactionsControllers.AdminApprove)
