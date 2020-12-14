@@ -383,7 +383,7 @@ Adminreject:(req,res)=>{
         // })
     })
 },getcompleted:(req,res)=>{
-    let sql=`select * from transactions where status='completed' && user_id=${db.escape(datatrans.user_id)}`
+    let sql=`select * from transactions where status='completed' `
         db.query(sql,(err,data)=>{
             if(err){
                 return res.status(500).send(err)
