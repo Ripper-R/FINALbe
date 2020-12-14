@@ -234,7 +234,7 @@ uploadPembayaran:(req,res)=>{
 inventDec:async (req,res)=>{
     try{
     const {datacart}=req.body
-    // console.log(req.body)
+    console.log(req.body)
     let sql=`SELECT * FROM product_details
     JOIN transactionsdetails ON transactionsdetails.product_id=product_details.product_id
     JOIN inventory ON product_details.kimia_id=inventory.kimia_id
@@ -307,15 +307,14 @@ inventDec:async (req,res)=>{
         
         
         //     // })
-
-    
-
-
-    
-    
-
 getAdminwaittingApprove:(req,res)=>{
-    let sql=`select * from transactions where status='onwaitingapprove'`
+    let sql=`select transactions.*,sum(transactionsdetails.qty * product.price)as totalprice from transactions
+    join transactionsdetails
+    on transactions.id=transactionsdetails.transactions_id
+    join product
+    on product.id=transactionsdetails.product_id
+    where status='OnwaitingApprove'
+    group by transactions_id`
     db.query(sql,(err,waitingapprove)=>{
         if (err){
             console.log(err)
@@ -341,7 +340,7 @@ AdminApprove:(req,res)=>{
                 console.log(err)
                 return res.status(500).send(err)
             }
-            
+            console.log(datatrans[0])
             sql=`select * from users where id=${db.escape(datatrans[0].user_id)}`
             db.query(sql,(err,datausers)=>{
                 if (err){
@@ -397,6 +396,14 @@ Adminreject:(req,res)=>{
         //     return res.send(waitingapprove)
         // })
     })
-},
+},getcompleted:(req,res)=>{
+    let sql=`select * from transactions where status='completed' && user_id=${db.escape(datatrans.user_id)}`
+        db.query(sql,(err,data)=>{
+            if(err){
+                return res.status(500).send(err)
+            }
+            return res.status(200).send(data)
+        })
+}
 
 }
