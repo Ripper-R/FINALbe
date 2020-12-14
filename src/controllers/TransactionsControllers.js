@@ -186,7 +186,7 @@ onbayarCC:(req,res)=>{
         }
         let arr=[]
         datacart.forEach((val)=>{
-            arr.push(QueryProm(`update transactionsdetails set totalprice=${val.price} where transactions_id=${val.idtrans} and product_id=${val.idprod}`))
+            arr.push(QueryProm(`update transactionsdetails set harga=${val.price} where transactions_id=${val.idtrans} and product_id=${val.idprod}`))
         })
         Promise.all(arr).then(()=>{
             return res.send('berhasil')// nggak perlu get cart lagi karena cart kalo berhasil otomatis kosong 
@@ -350,9 +350,9 @@ AdminApprove:(req,res)=>{
                 }
                 const htmlrender=fs.readFileSync('./template/notif.html','utf8')//html berubah jadi string
                 const template=handlebars.compile(htmlrender) 
-                const htmlemail=template({message:'sleamat udah di approve bro'})
+                const htmlemail=template({message:'Your transactions has been proceed'})
                 transporter.sendMail({
-                    from:"Opentrip hiha <dinotestes12@gmail.com>",
+                    from:"Your most trusted drugstore <drugstore.com>",
                     to:datausers[0].email,
                     subject:'Payment',
                     html:htmlemail
