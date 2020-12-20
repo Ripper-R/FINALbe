@@ -77,7 +77,7 @@ module.exports={
             console.log(err)
             if (err) return res.status(500).send({message:err.message})
             if (!datausers.length){
-                return res.status(500).send({message:'user tidak terdaftar bro'})
+                return res.status(500).send({message:'username/password salah'})
             }
             sql=`select td.qty,p.nama,p.banner,p.price,p.id as idprod,t.id as idtrans 
                 from transactionsdetails td 
@@ -115,5 +115,12 @@ module.exports={
         // }).catch((err)=>{
         //     return res.status(500).send({message:err.message})
         // })
+    },
+    getuserid:(req,res)=>{
+    let sql=`SELECT * from users where username=?`
+    db.query(sql,(err,data)=>{
+        if (err) return res.status(500).send(err)
+        return res.status(200).send(data)
+    })
     }
 }

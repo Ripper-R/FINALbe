@@ -164,8 +164,21 @@ db.query(sql,[datacart],(err,result)=>{
         console.log(err)
         return res.status(500).send(err)
     }
+    // sql=`select td.qty,p.nama,p.banner,p.price,p.id as idprod,t.id as idtrans 
+    // from transactionsdetails td 
+    // join transactions t on td.transactions_id=t.id 
+    // join product p on td.product_id=p.id
+    // where t.status='onCart' and t.user_id=?`
+    // db.query(sql,[user_id],(err,result2)=>{
+    //     if (err){
+    //         console.log(err)
+    //         return res.status(500).send(err)
+    //     }
+         
+    // })
     return res.send(result)
     })
+    
 
 },
 
@@ -174,7 +187,7 @@ onbayarCC:(req,res)=>{
     let sql=`update transactions set ? where id=${db.escape(idtrans)}` 
     let dataupdate={
         tanggal:new Date(),
-        status:'completed',
+        status:'OnwaitingApprove',
         metode:'cc',
         buktipembayaran:nomercc
     }
@@ -396,8 +409,10 @@ Adminreject:(req,res)=>{
         //     return res.send(waitingapprove)
         // })
     })
-},getcompleted:(req,res)=>{
-    let sql=`select * from transactions where status='completed'`
+},
+getcompleted:(req,res)=>{
+    const {id} = req.params
+    let sql=`select * from transactions  join transactionsdetails on transactions.id=transactionsdetails.transactions_id where status='completed'`
         db.query(sql,(err,data)=>{
             if(err){
                 return res.status(500).send(err)
