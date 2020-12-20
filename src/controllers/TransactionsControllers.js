@@ -210,7 +210,10 @@ uploadPembayaran:(req,res)=>{
                 if(imagePath){
                     fs.unlinkSync('./public'+imagePath)
                 }
-                return res.status(500).send(err)
+                let arr=[]
+                datacart.forEach((val)=>{
+                    arr.push(QueryProm(`update transactionsdetails set harga=${val.price} where transactions_id=${val.idtrans} and product_id=${val.idprod}`))
+                })
             }
             return res.send('berhasil')// nggak perlu get cart lagi karena cart kalo berhasil otomatis kosong
         })
